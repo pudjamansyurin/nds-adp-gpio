@@ -8,7 +8,6 @@
 #include "adp_gpio.h"
 
 extern NDS_DRIVER_GPIO Driver_GPIO;
-#define GPIO_Dri       Driver_GPIO
 
 /* Private macros */
 #define GPIO_SW_USED_MASK     0x000000ff
@@ -25,28 +24,28 @@ static uint8_t segments[10] = {
 /* Private function definitions */
 static void segment_write(int offset, int num)
 {
-	GPIO_Dri.Write(0xFF << offset, 1);
-	GPIO_Dri.Write(segments[num%10] << offset, 0);
+	Driver_GPIO.Write(0xFF << offset, 1);
+	Driver_GPIO.Write(segments[num%10] << offset, 0);
 }
 
 /* Public function definitions */
 void adp_btnInit(NDS_GPIO_SignalEvent_t cb_event)
 {
 	// initialize GPIO
-	GPIO_Dri.Initialize(cb_event);
+	Driver_GPIO.Initialize(cb_event);
 
 	// set GPIO direction (switches: input)
-	GPIO_Dri.SetDir(GPIO_SW_USED_MASK, NDS_GPIO_DIR_INPUT);
+	Driver_GPIO.SetDir(GPIO_SW_USED_MASK, NDS_GPIO_DIR_INPUT);
 
 	// Set switches interrupt mode to negative edge and enable it
-	GPIO_Dri.Control(NDS_GPIO_SET_INTR_NEGATIVE_EDGE | NDS_GPIO_INTR_ENABLE,
+	Driver_GPIO.Control(NDS_GPIO_SET_INTR_NEGATIVE_EDGE | NDS_GPIO_INTR_ENABLE,
 			GPIO_SW_USED_MASK);
 }
 
 void adp_7segInit(void)
 {
 	// set GPIO direction (7-segments: output)
-	GPIO_Dri.SetDir(GPIO_7SEG_USED_MASK, NDS_GPIO_DIR_OUTPUT);
+	Driver_GPIO.SetDir(GPIO_7SEG_USED_MASK, NDS_GPIO_DIR_OUTPUT);
 }
 
 
@@ -57,7 +56,7 @@ void adp_7segWrite(int channel, int num)
 			segment_write(GPIO_7SEG1_OFFSET, num);
 			break;
 		case 1:
-			segment_write(GPIO_7SEG1_OFFSET, num);
+			segment_write(GPIO_7SEG2_OFFSET, num);
 			break;
 		default:
 			segment_write(GPIO_7SEG1_OFFSET, num % 10);

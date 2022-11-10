@@ -12,6 +12,17 @@
 static void btn_reader(uint32_t event)
 {
 	// do something with this event button
+	switch (event)
+	{
+		case NDS_GPIO_EVENT_PIN0:
+			 break;
+
+		case NDS_GPIO_EVENT_PIN1:
+			 break;
+
+		default:
+			 break;
+	}
 }
 
 int main(void)
