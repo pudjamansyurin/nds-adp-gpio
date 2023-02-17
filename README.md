@@ -9,41 +9,43 @@
 ```c
 #include "nds-adp-gpio/adp_gpio.h"
 
-static void btn_reader(uint32_t event)
+/* Private function definitions --------------------------------------------- */
+static void gpio_callback(uint32_t u32_pin)
 {
-	// do something with this event button
-	switch (event)
-	{
-		case NDS_GPIO_EVENT_PIN0:
-			 break;
+    // do something with this event button
+    switch (u32_pin)
+    {
+        case NDS_GPIO_EVENT_PIN0:
+             break;
 
-		case NDS_GPIO_EVENT_PIN1:
-			 break;
+        case NDS_GPIO_EVENT_PIN8:
+             break;
 
-		default:
-			 break;
-	}
+        default:
+             break;
+    }
 }
 
+/* Public function definitions ---------------------------------------------- */
 int main(void)
 {
-	uint8_t u8_cntr = 0;
+    uint8_t u8_cntr = 0;
 
-	// Initialize buttons
-	adp_btnInit(btn_reader);
+    // Initialize buttons
+    adp_init(gpio_callback);
 
-	// Initialize 7-segment
-	adp_7segInit();
+    // Initialize other GPIO
+    adp_pinInit(NDS_GPIO_EVENT_PIN8, NDS_GPIO_DIR_INPUT);
     
-	// Set each 7-segment channel to zero
-	adp_7segWrite(0, 0);
-	adp_7segWrite(1, 0);
+    // Set each 7-segment channel to zero
+    adp_7segWrite(0, 0);
+    adp_7segWrite(1, 0);
 
-	while(1) {
-		// Set all 7-segment channel at once    
-		adp_7segWrite(-1, u8_cntr++);
-		delay(1);
-	}
+    while(1) {
+        // Set all 7-segment channel at once
+        adp_7segWrite(-1, u8_cntr++);
+        delay(1);
+    }
 }
 
 ```
